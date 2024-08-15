@@ -1,0 +1,7 @@
+def portfolioRebalanceIncome(dataset, Initial, period, method):
+    portfolio_val = [Initial]
+    for i in range(len(period) - 2):
+        allocation, leftover = best(dataset, portfolio_val = portfolio_val[i], endDate = period[i + 1], method = method)
+        pIncome = portfolioIncome(dataset, allocation, period[i + 2], leftover)
+        portfolio_val.append(pIncome)
+    return portfolio_val
