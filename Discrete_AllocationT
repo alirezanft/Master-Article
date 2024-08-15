@@ -1,0 +1,12 @@
+def Discrete_AllocationT(dataset, weights, portfolio = '', portfolio_val = 5000):
+    if portfolio == '':
+        df = dataset
+    else:
+        portfolio = [x for x in portfolio if x is not None]
+        df = dataset.iloc[:, portfolio]
+    
+    latest_prices = get_latest_prices(df)
+    da = DiscreteAllocation(weights, latest_prices, total_portfolio_value = portfolio_val)
+    allocation, leftover = da.lp_portfolio()
+    print('Discrete allocation:', allocation)
+    print('Funds Remaining:', round(leftover, 2)) 
