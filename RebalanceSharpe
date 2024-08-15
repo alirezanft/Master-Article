@@ -1,0 +1,6 @@
+def RebalanceSharpe(dataset, period, method):
+    sharpeRatio = []
+    for i in range(len(period) - 1):
+        sharpe = bestSharpeRatioIndex(dataset, method = method, endDate = period[i + 1])
+        sharpeRatio.append(sharpe)
+    return sharpeRatio
