@@ -1,0 +1,10 @@
+def RebalanceReturnVolatilityT(dataset, period, method):
+    d = len(period) - 2
+    Return_list = []
+    Volatility_list = []
+    for i in range(len(period) - 1):
+        current_return, current_volatility = ReturnVolatilityIndexT(dataset, method=method, endDate=period[i + 1])
+        
+        Return_list.append(round(current_return / d, 3))
+        Volatility_list.append(round(current_volatility / d, 3))
+    return Return_list, Volatility_list
