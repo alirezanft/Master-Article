@@ -1,0 +1,2 @@
+from pypfopt.efficient_frontier import EfficientFrontier as ef
+ef.clean_weights()
