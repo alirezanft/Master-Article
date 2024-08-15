@@ -1,0 +1,8 @@
+def portfolioIncome(dataset, dic, date, leftover):   
+    assets = [key for key, _ in dic.items()]    
+    assetsNumber = list(dic.values())
+    
+    value = np.dot(dataset[assets].loc[date].values, assetsNumber)
+    
+    income = math.trunc(value + leftover)
+    return income
