@@ -1,0 +1,9 @@
+import cvxpy as cp
+
+def transaction_cost_objective(w, S, **kwargs):
+    # Extract transaction_cost_pct from kwargs
+    transaction_cost_pct = kwargs["transaction_cost_pct"]
+    # Calculate the transaction cost term
+    transaction_cost = transaction_cost_pct * cp.sum(cp.abs(w - 0.5))
+    # Return the total objective function value
+    return w @ S @ w + transaction_cost
