@@ -1,0 +1,31 @@
+def bestT(dataset, endDate, portfolio_val = 5000, startDate = '2019-01-01', method = ''):
+    
+        
+        dataset = dataset.loc[startDate:endDate, ]
+        if method == 'all':
+            portfolio = ''
+            weights = Portfolio_OptimizationT(dataset)
+            allocation, leftover = Discrete_Allocation2T(dataset, weights, portfolio, portfolio_val)
+        if method == '' or method == 'km' or method == 'hc':
+            data = returnAndVolatility(dataset, startDate, endDate)
+            if method == 'km' or method == 'hc':
+                bestSharpeRatio = 0
+                numberCluster = 0
+
+                for n_cluster in range(10, 40):
+                    portfolio = selectAssets(data, n_cluster, method)
+                    bestSharpeRatioStep = SharpeRatio(dataset, portfolio)
+
+                    if bestSharpeRatioStep >= bestSharpeRatio:
+                        bestSharpeRatio = bestSharpeRatioStep
+                        numberCluster = n_cluster
+
+                #print ('Best numberCluster:', numberCluster)
+                portfolio = selectAssets(data, numberCluster, method)
+                weights = Portfolio_OptimizationT(dataset, portfolio)
+                allocation, leftover = Discrete_Allocation2T(dataset, weights, portfolio, portfolio_val)
+            if method == '':
+                portfolio = selectAssets(data)
+                weights = Portfolio_OptimizationT(dataset, portfolio)
+                allocation, leftover = Discrete_Allocation2T(dataset, weights, portfolio, portfolio_val)
+        return allocation, leftover
