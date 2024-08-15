@@ -1,0 +1,25 @@
+def Portfolio_Optimization(dataset, portfolio = ''):
+    if portfolio == '':
+        df = dataset
+    else:
+        portfolio = [x for x in portfolio if x is not None]
+        df = dataset.iloc[:,portfolio]
+    #Calculate the expected returns and the annualised sample covariance matrix of asset returns
+    mu = expected_returns.mean_historical_return(df)
+    S = risk_models.sample_cov(df)
+    ef = EfficientFrontier(mu, S)
+    #optimize for max sharpe ratio
+    
+    ef.add_objective(objective_functions.L2_reg, gamma = 1.1)
+    #ef.add_constraint(lambda w: w @ mu >= 0.9)
+    #ef.add_constraint(lambda w: w.T @ S @ w <= 0.4 ** 2)
+    
+    
+    weights = ef.max_sharpe()
+
+    cleaned_weights = ef.clean_weights()
+    cleaned_weights = {asset: round(weight, 2) for asset, weight in weights.items() if weight > 0.0}
+    #print(cleaned_weights) 
+    #print('Number of Assets:',  len(cleaned_weights))
+    #ef.portfolio_performance(verbose = True)
+    return weights
