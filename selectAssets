@@ -1,0 +1,46 @@
+def selectAssets(data, n_clusters = '', method = '', checkRet = 0):
+    
+    if method == 'km':
+        k_means = cluster.KMeans(n_clusters = n_clusters, random_state = 42)
+        k_means.fit(X)
+        labels = k_means.predict(X)
+    
+    elif method == 'hc':
+        hc = AgglomerativeClustering(n_clusters = n_clusters, affinity = 'euclidean', linkage = 'ward')
+        labels = hc.fit_predict(X)
+    
+    else:
+        ap = AffinityPropagation()
+        ap.fit(X)
+        labels = ap.predict(X)
+    
+    # Get the indices of the stocks in each cluster
+    clusters = {}
+    for i, label in enumerate(labels):
+        if label not in clusters:
+            clusters[label] = []
+        clusters[label].append(i)
+
+    # Build the portfolio by selecting the stock with the highest Sharpe ratio in each cluster
+    portfolio = []
+    for label, indices in clusters.items():
+        max_sharpe_ratio = -1
+        best_stock = None
+        for i in indices:
+            ret = data.iloc[i, 0]
+            vol = data.iloc[i, 1]
+            
+            if checkRet == True:
+                if ret > 0:
+                    sharpe_ratio = ret / vol
+                    if sharpe_ratio > max_sharpe_ratio:
+                        max_sharpe_ratio = sharpe_ratio
+                        best_stock = i
+            else:
+                sharpe_ratio = ret / vol
+                if sharpe_ratio > max_sharpe_ratio:
+                    max_sharpe_ratio = sharpe_ratio
+                    best_stock = i
+        portfolio.append(best_stock)
+
+    return portfolio
